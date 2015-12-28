@@ -174,6 +174,7 @@ class dict(RedisType):
 
 class list(RedisType):
     """
+    TODO
     http://redis.io/commands#list
     """
     @classmethod
