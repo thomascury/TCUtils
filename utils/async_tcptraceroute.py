@@ -36,13 +36,13 @@ def tcping(host, port, ttl):
     establishment_time = None
     try:
         start = time.time()
-        sock.connect((host, port))
+        sock.connect((host, int(port)))
         stop = time.time()
         peer, _ = sock.getpeername()
     except (socket.error, socket.timeout) as err:
-        return err
+        establishment_time = err
     except KeyboardInterrupt:
-        return ConnectionAbortedError("KeyboardInterrupt")
+        establishment_time = ConnectionAbortedError("KeyboardInterrupt")
     finally:
         if start and stop:
             establishment_time = stop - start
