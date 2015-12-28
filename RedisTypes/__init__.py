@@ -2,7 +2,7 @@ from collections import Iterable
 from typing import Dict, Generator
 
 from RedisTypes.RedisDB import RedisDB
-from utils.type_hinting import CheckFunctionTypeMetaClass
+from tcutils.type_hinting import CheckFunctionTypeMetaClass
 
 
 def _retype(bytestring: bytes):
@@ -35,11 +35,11 @@ class dict(RedisType):
     @classmethod
     def fromdict(cls, name: str, redisdb: RedisDB, dico: dict) -> dict:
         """
-        Generates a utils.RedisTypes.dict from a builtin type dict
+        Generates a tcutils.RedisTypes.dict from a builtin type dict
         :param name: str
         :param redisdb: RedisDB.RedisDB
         :param dico: dict
-        :return: utils.RedisTypes.dict
+        :return: tcutils.RedisTypes.dict
         """
         command = "HMSET {}".format(name)
         for key in dico.keys():

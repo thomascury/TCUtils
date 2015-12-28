@@ -1,4 +1,4 @@
-from utils.ping import ping
+from tcutils.ping import ping
 import redis
 
 
