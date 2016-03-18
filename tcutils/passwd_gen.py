@@ -62,13 +62,13 @@ def special_add_to_wordlist(word_list, n_words):
     word_roll = special_get_word_roll(n_words) - 1
     digit_roll = special_get_digit_roll(n_words) - 1
     special_roll_1, special_roll_2 = roll(2)
-    print((word_roll, digit_roll, special_roll_1, special_roll_2))
+    # print((word_roll, digit_roll, special_roll_1, special_roll_2))
     special_char = special[special_roll_2 - 1][special_roll_1 - 1]
-    print("\"{}\"[{}] = {}".format(word_list[word_roll], digit_roll, special_char))
+    # print("\"{}\"[{}] = {}".format(word_list[word_roll], digit_roll, special_char))
     word_list[word_roll] = word_list[word_roll][:digit_roll] + special_char + word_list[word_roll][digit_roll+1:]
 
 
-def gen_passphrase(n_words=4, with_special=True):
+def gen_diceware_passphrase(n_words=4, with_special=True):
     word_list = get_words(n_words)
     if with_special:
         special_add_to_wordlist(word_list, n_words)
@@ -78,7 +78,7 @@ def gen_passphrase(n_words=4, with_special=True):
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:
-        print(gen_passphrase(int(sys.argv[1])))
+        print(gen_diceware_passphrase(int(sys.argv[1])))
     else:
-        print(gen_passphrase(4, False))
+        print(gen_diceware_passphrase(4, False))
 
