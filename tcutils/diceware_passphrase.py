@@ -4,7 +4,7 @@ import sys
 from docopt import docopt
 
 
-diceware_list_file = r"C:\beale.wordlist.asc"
+diceware_list_file = r"tcutils\beale.wordlist.asc"
 
 
 def parse_list(file=diceware_list_file):
@@ -132,13 +132,13 @@ def passphrase_check(passphrase, length, upper, special, number):
 def enforced_passphrase(length, specials=0, capitalized=0, number=1):
     t = 1
     passphrase = gen_diceware_passphrase(length, specials, capitalized)
-    print("Try {}".format(t))
+    # print("Try {}".format(t))
     while not passphrase_check(passphrase, length, capitalized, specials, number):
         # print(passphrase + " did not pass !")
         # sleep(1)
         t += 1
         passphrase = gen_diceware_passphrase(length, specials, capitalized)
-        print("Try {}".format(t))
+        # print("Try {}".format(t))
     return passphrase
 
 
@@ -165,7 +165,7 @@ if __name__ == '__main__':
     special = arguments["<nb_special>"] is not None and int(arguments["<nb_special>"]) or 1
     capitalized = arguments["<nb_capitalized>"] is not None and int(arguments["<nb_capitalized>"]) or 1
     number = arguments["<nb_number>"] is not None and int(arguments["<nb_number>"]) or 1
-    print(arguments)
+    # print(arguments)
     print(enforced_passphrase(word_count, special, capitalized, number))
     # if len(sys.argv) == 2:
     #     print(gen_diceware_passphrase(int(sys.argv[1])))

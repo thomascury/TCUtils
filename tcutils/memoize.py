@@ -1,3 +1,6 @@
+from functools import wraps
+
+
 def fast_memoize_one_arg(f):
     class MemoDict(dict):
         __slots__ = ()
@@ -44,3 +47,19 @@ def fast_memoize_any_args(func):
             args = len(args) > 0 and args or self.__token__
             return dict.__getitem__(self, args)
     return MemoDict().__getitem__
+
+
+def memoize(func):
+    """A simple fast_memoize decorator for functions supporting positional args."""
+    cache = func.cache = {}
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        key = (args, frozenset(sorted(kwargs.items())))
+        try:
+            return cache[key]
+        except KeyError:
+            ret = cache[key] = func(*args, **kwargs)
+        return ret
+
+    return wrapper

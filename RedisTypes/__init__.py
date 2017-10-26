@@ -2,7 +2,7 @@ from collections import Iterable
 from typing import Dict, Generator
 
 from RedisTypes.RedisDB import RedisDB
-from tcutils.type_hinting import CheckFunctionTypeMetaClass
+from tcutils.type_hinting import CheckFunctionTypeMetaClass, EnforceFunctionTypeMetaClass
 
 
 def _retype(bytestring: bytes):

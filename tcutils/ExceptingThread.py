@@ -9,8 +9,6 @@ import ctypes
 
 # Async raise recipe found on
 # http://tomerfiliba.com/recipes/Thread2/
-
-
 def _async_raise(tid, exctype):
     """raises the exception, performs cleanup if needed"""
     if not inspect.isclass(exctype):
@@ -59,41 +57,43 @@ class Thread(threading.Thread):
 
 
 class ExceptingThread(Thread):
-    def __init__(self, pid, worker_function, queues, shutdown_event):
+    def __init__(self, worker_function, queues, shutdown_event):
+        self.queues = queues
         self.tasks, self.results, self.errors = queues
-        self._shutdown = shutdown_event
+        self._shutdown_event = shutdown_event
         self._worker = worker_function
-        self._pid = pid
-        super(ExceptingThread, self).__init__(name="thread-{}".format(pid),
-                                              target=self._worker,
-                                              args=(pid, queues, shutdown_event))
+        super(ExceptingThread, self).__init__(target=self._worker)
         self.setDaemon(True)
 
     def run(self):
         self.prepare_thread()
         try:
-            super(ExceptingThread, self).run()
+            # super(ExceptingThread, self).run()
+            self._worker(*self._args, **self._kwargs)
         except (KeyboardInterrupt, SystemExit) as exc:
-            print("Interruption {} in thread_{}".format(type(exc).__name__, self._pid))
+            print("Interruption {} in {}".format(type(exc).__name__, self.name))
             self.error_treatment(exc)
             self.cancel_thread()
         except Exception as exc:
+            print("Exception {} in {}".format(type(exc).__name__, self.name))
             self.error_treatment(exc)
         finally:
             self.cleanup_thread()
 
     def cancel_thread(self):
-        # raise NotImplementedError
-        pass
+        self._shutdown_event.set()
 
     def error_treatment(self, exc):
         self.errors.put_nowait(exc)
 
     def prepare_thread(self):
-        print("{} started".format(self.name))
+        self.setName("thread-{}".format(self._get_my_tid()))
+        self._args = (self._get_my_tid(), self.queues, self._shutdown_event)
+        self._kwargs = {}
+        print("{} started at {}".format(self.name, datetime.datetime.now()))
 
     def cleanup_thread(self):
-        print("{} stopped.".format(self.name))
+        print("{} stopped at {}".format(self.name, datetime.datetime.now()))
 
 
 def worker_fn(pid, queues, shutdown_event):
@@ -104,12 +104,11 @@ def worker_fn(pid, queues, shutdown_event):
         except Queue.Empty:
             break
         try:
-            print("worker_{}: working on item #{}".format(pid, task))
             sleep(1)
             results.put_nowait(task)
         finally:
-            print("worker_{}: finished working on item #{}".format(pid, task))
             tasks.task_done()
+            print("worker-{} :: output: {}".format(pid, task))
 
 
 def main():
@@ -121,11 +120,10 @@ def main():
     for i in range(1, 11):
         task_queue.put_nowait(i)
 
-    nb_of_threads = 3
+    nb_of_threads = 5
     shutdown_event = threading.Event()
-    threads = [ExceptingThread(pid, worker_fn, queues, shutdown_event) for pid in range(nb_of_threads)]
+    threads = [ExceptingThread(worker_fn, queues, shutdown_event) for i in range(nb_of_threads)]
 
-    print("Go !")
     starting_stamp = datetime.datetime.now()
 
     try:
@@ -135,17 +133,16 @@ def main():
 
         while True in (thread.is_alive() for thread in threads):
             sleep(.5)
-    except (KeyboardInterrupt, SystemExit):
-        print("Interruption detected. Propagating to threads.")
+    except (KeyboardInterrupt, SystemExit) as exc:
+        print("{} detected. Propagating to threads...".format(type(exc).__name__))
         shutdown_event.set()
         for thread in threads:
-            thread.interrupt()
+            thread.raise_exc(exc)
         for thread in threads:
             thread.join()
         sleep(1)
     finally:
         extract_time = datetime.datetime.now() - starting_stamp
-        print("Finished !")
 
     # Parse results
     results = []
@@ -170,7 +167,7 @@ def main():
     if len(errors) > 0:
         warnings.warn("Errors occured, check the error log.", RuntimeWarning)
 
-    print(print("Extracted {} lines in {}.".format(nb_match, extract_time)))
+    print("Extracted {} lines in {}.".format(nb_match, extract_time))
 
 if __name__ == '__main__':
     main()

@@ -1,5 +1,6 @@
 import sys
 
+
 class _super (object):
     """
     Wrapper for the super object.
@@ -114,6 +115,7 @@ def _getSuper (self):
         raise TypeError("Can only call 'super' in a bound method")
 
     return _super(super(cur_class, self), name)
+
 
 class autosuper (object):
     """
