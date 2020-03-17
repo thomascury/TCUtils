@@ -28,12 +28,16 @@ class InitializationError(BaseException):
     pass
 
 
+std_dict = dict
+std_list = list
+
+
 class dict(RedisType):
     """
     http://redis.io/commands#hash
     """
     @classmethod
-    def fromdict(cls, name: str, redisdb: RedisDB, dico: dict) -> dict:
+    def fromdict(cls, name: str, redisdb: RedisDB, dico: std_dict) -> std_dict:
         """
         Generates a tcutils.RedisTypes.dict from a builtin type dict
         :param name: str
@@ -124,7 +128,7 @@ class dict(RedisType):
         for key in [_retype(key) for key in keys]:
             yield key
 
-    def keys(self) -> list:
+    def keys(self) -> std_list:
         """
         :return: list
         """
@@ -133,7 +137,7 @@ class dict(RedisType):
         keys = [_retype(key) for key in keys]
         return keys
 
-    def values(self) -> list:
+    def values(self) -> std_list:
         """
         :return: list
         """
@@ -142,7 +146,7 @@ class dict(RedisType):
         values = [_retype(value) for value in values]
         return values
 
-    def items(self) -> list:
+    def items(self) -> std_list:
         """
         :return: list
         """
@@ -157,7 +161,7 @@ class dict(RedisType):
                 items.append((key, value))
         return items
 
-    def update(self, dico: dict) -> bool:
+    def update(self, dico: std_dict) -> bool:
         """
         :param dico: dict
         :return: boolean
@@ -229,6 +233,7 @@ def testdict():
 def testlist():
     db = RedisDB("127.0.0.1")
     print(_retype(db.execute("ECHO 'Hello'")))
+
 
 if __name__ == '__main__':
     testdict()
