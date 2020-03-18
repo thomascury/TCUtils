@@ -68,10 +68,11 @@ if __name__ == '__main__':
         if len(authorized_chars) == 0:
             # raise IndexError("You must specify at least one group of authorized characters.")
             authorized_chars = lowercase_letters + uppercase_letters + number_digits + special_characters
-    char_list = list(authorized_chars)
-    for char in banned_chars:
-        char_list.remove(char)
-    authorized_chars = "".join(char_list)
+    if banned_chars is not None:
+        char_list = list(authorized_chars)
+        for char in banned_chars:
+            char_list.remove(char)
+        authorized_chars = "".join(char_list)
 
     for i in range(int(arguments["--multi"])):
         print(generate_password(length, authorized_chars=authorized_chars))
