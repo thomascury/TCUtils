@@ -19,7 +19,7 @@ __ver__ = "Password Generator v2"
 __doc__ = f"""Simple password generator
 
 Usage:
-    {filename} [-luns] [-c <nb>] [-m <nb>]
+    {filename} [-luns] [options]
     {filename} --authorized-chars="<char_list>" [options]
 
 Options:
@@ -46,7 +46,7 @@ Character options are the following :
 
 if __name__ == '__main__':
     arguments = docopt(__doc__, version=__ver__)
-    print(arguments)
+    # print(arguments)
     length = int(arguments["--length"])
     authorized_chars = arguments["--authorized-chars"]
     banned_chars = arguments["--banned-chars"]
