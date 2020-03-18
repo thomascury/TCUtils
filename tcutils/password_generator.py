@@ -32,7 +32,7 @@ Options:
     -l, --lowercase                     Include lowercase letters in the password
     -u, --uppercase                     Include uppercase letters in the password
     -n, --numbers                       Include numbers in the password
-    -s, --specials                      Include special_characters characters in the password
+    -s, --specials                      Include special characters in the password
     --authorized-chars="<char_list>"    Provide a list of authorized character for the password creation
 
 If no character option is specified and no authorized character list is provided, use all four by default
