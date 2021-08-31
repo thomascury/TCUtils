@@ -122,8 +122,8 @@ def passphrase_check(passphrase, length, upper, special, number):
     #       "".format(pf=passphrase,
     #                 wcf=w, wca=length,
     #                 uf=u, ua=upper,
-    #                 nf=n, na=number and '>0' or '=0',
-    #                 sf=s, sa=special
+    #                 nf=n, na=numbers and '>0' or '=0',
+    #                 sf=s, sa=special_characters
     #                 ))
 
     return w == length and u == upper and s == special and n == number
@@ -154,9 +154,9 @@ Options:
     -h --help                   Show this screen.
     --version                   Show version.
     <nb_of_words>               Number of words in the passphrase [default: 4].
-    <nb_special>                Number of special characters in the passphrase [default: 1].
+    <nb_special>                Number of special_characters characters in the passphrase [default: 1].
     <nb_capitalized>            Number of capitalized characters in the passphrase [default: 1].
-    <nb_number>                 Number of number characters in the passphrase [default: 1].
+    <nb_number>                 Number of numbers characters in the passphrase [default: 1].
 """
 
 if __name__ == '__main__':

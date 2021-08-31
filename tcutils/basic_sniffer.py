@@ -85,7 +85,7 @@ def packet_loop(s):
         ]
         print(' '.join(addrinfo))
 
-        # Parse IP packets, IP Protocol number = 8
+        # Parse IP packets, IP Protocol numbers = 8
         if eth_protocol == 8:
             # Parse IP header
             # take first 20 characters for the ip header

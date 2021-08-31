@@ -78,7 +78,7 @@ class MathMatrix(Matrix):
 
 
 class TicTacToeBoard(Matrix):
-    """TicTacToeBoard is a special
+    """TicTacToeBoard is a special_characters
     Matrix of size 3, with default value
     set to ' ' and only accepting
     'X' or 'O' as set value"""

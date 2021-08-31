@@ -11,7 +11,7 @@ def generate_password(length, authorized_chars):
 lowercase_letters = "abcdefghijklmnopqrstuvwxyz"
 uppercase_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 number_digits = "0123456789"
-special_characters = "~!#$%^&*()-=+[]\\{}:;\"'<>?/"
+special_characters = "~!#$%^&*()-=+[]\\{}:;\"'<>?/@"
 
 filename = basename(argv[0])
 
@@ -33,6 +33,7 @@ Options:
     -u, --uppercase                     Include uppercase letters in the password
     -n, --numbers                       Include numbers in the password
     -s, --specials                      Include special characters in the password
+    -x, --hexadecimals                  Inlcude hexadecimal charaters in the password
     --authorized-chars="<char_list>"    Provide a list of authorized character for the password creation
 
 If no character option is specified and no authorized character list is provided, use all four by default
@@ -54,6 +55,7 @@ if __name__ == '__main__':
     uppercase = arguments["--uppercase"]
     numbers = arguments["--numbers"]
     specials = arguments["--specials"]
+    hexadecimals = arguments["--hexadecimals"]
 
     if authorized_chars is None:
         authorized_chars = ""
@@ -65,13 +67,18 @@ if __name__ == '__main__':
             authorized_chars += number_digits
         if specials:
             authorized_chars += special_characters
+        if hexadecimals:
+            authorized_chars += number_digits + uppercase_letters[:6]
         if len(authorized_chars) == 0:
             # raise IndexError("You must specify at least one group of authorized characters.")
             authorized_chars = lowercase_letters + uppercase_letters + number_digits + special_characters
     if banned_chars is not None:
         char_list = list(authorized_chars)
-        for char in banned_chars:
-            char_list.remove(char)
+        for char in set(banned_chars):
+            try:
+                char_list.remove(char)
+            except ValueError:
+                print(f"Character '{char}' not in the specified character set:\n{char_list}")
         authorized_chars = "".join(char_list)
 
     for i in range(int(arguments["--multi"])):
