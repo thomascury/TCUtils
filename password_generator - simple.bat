@@ -1,5 +1,5 @@
 @echo off
 :loop
-    python -m tcutils.password_generator -lun
+    venv\Scripts\python -m tcutils.password_generator -lun
     pause
 goto loop
